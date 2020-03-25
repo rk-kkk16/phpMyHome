@@ -1,0 +1,180 @@
+.star_lv5 {
+    background-color:orange;
+}
+.star_lv4 {
+    background-color:yellow;
+}
+.star_lv3 {
+    background-color:lime;
+}
+.star_lv2 {
+    background-color:blue;
+}
+.star_lv1 {
+    background-color:aqua;
+}
+.star_str_lv5 {
+    color:orange;
+}
+.star_str_lv4 {
+    color:yellow;
+}
+.star_str_lv3 {
+    color:lime;
+}
+.star_str_lv2 {
+    color:blue;
+}
+.star_str_lv1 {
+    color:aqua;
+}
+
+.profimg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-position: center middle;
+    background-size: contain;
+    display: inline-block;
+    border: 2px solid rgba(204,204,204,0.5);
+}
+
+.prfmini {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(204,204,204,0.5);
+    margin-bottom:0px;
+}
+
+#loading {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+#loading img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.hidden {
+    display: none;
+}
+.link-btn.active {
+    background-color: #ffc9d2;
+}
+
+/** modal window **/
+.modal-inner {
+    width: 80%;
+    max-height: 80%;
+    margin: 0;
+    padding: 10px 20px;
+    border: 2px solid #aaa;
+    background: #fff;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    z-index: 12;
+    display: none;
+}
+.modal-overlay {
+    z-index: 11;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba( 0,0,0, 0.75 );
+}
+.modal-button-link {
+    color: #00f ;
+    text-decoration: underline ;
+}
+
+.modal-button-link:hover {
+    cursor: pointer ;
+    color: #f00 ;
+}
+
+.modal-close-area {
+    text-align: right;
+}
+
+.modal-active {
+}
+
+/** スイッチ **/
+/* === ボタンを表示するエリア ============================== */
+.switchArea {
+  line-height    : 30px;                /* 1行の高さ          */
+  letter-spacing : 0;                   /* 文字間             */
+  text-align     : center;              /* 文字位置は中央     */
+  font-size      : 12px;                /* 文字サイズ         */
+
+  position       : relative;            /* 親要素が基点       */
+  /* margin         : auto; */                /* 中央寄せ           */
+  width          : 82px;               /* ボタンの横幅       */
+  background     : #fff;                /* デフォルト背景色   */
+}
+
+ /* === チェックボックス ==================================== */
+.switchArea input[type="checkbox"] {
+  display        : none;            /* チェックボックス非表示 */
+}
+
+ /* === チェックボックスのラベル（標準） ==================== */
+.switchArea label {
+  display        : block;               /* ボックス要素に変更 */
+  box-sizing     : border-box;          /* 枠線を含んだサイズ */
+  height         : 30px;                /* ボタンの高さ       */
+  border         : 2px solid #999999;   /* 未選択タブのの枠線 */
+  border-radius  : 15px;                /* 角丸               */
+}
+
+ /* === チェックボックスのラベル（ONのとき） ================ */
+.switchArea input[type="checkbox"]:checked +label {
+  border-color   : #78bd78;             /* 選択タブの枠線     */
+}
+
+ /* === 表示する文字（標準） ================================ */
+.switchArea label span:after{
+  content        : "OFF";               /* 表示する文字       */
+  padding        : 0 0 0 18px;          /* 表示する位置       */
+  color          : #999999;             /* 文字色             */
+}
+
+ /* === 表示する文字（ONのとき） ============================ */
+.switchArea  input[type="checkbox"]:checked + label span:after{
+  content        : "ON";                /* 表示する文字       */
+  padding        : 0 18px 0 0;          /* 表示する位置       */
+  color          : #78bd78;             /* 文字色             */
+}
+
+ /* === 丸部分のSTYLE（標準） =============================== */
+.switchArea>.swImg {
+  position       : absolute;            /* 親要素からの相対位置*/
+  width          : 22px;                /* 丸の横幅           */
+  height         : 22px;                /* 丸の高さ           */
+  background     : #999999;             /* カーソルタブの背景 */
+  top            : 4px;                 /* 親要素からの位置   */
+  left           : 4px;                 /* 親要素からの位置   */
+  border-radius  : 11px;                /* 角丸               */
+  transition     : .2s;                 /* 滑らか変化         */
+}
+
+ /* === 丸部分のSTYLE（ONのとき） =========================== */
+.switchArea input[type="checkbox"]:checked ~ .swImg {
+  transform      : translateX(52px);    /* 丸も右へ移動       */
+  background     : #78bd78;             /* カーソルタブの背景 */
+}
+
+/** crumb **/
+.crumb {
+    margin-bottom:0;
+}
