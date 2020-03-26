@@ -36,6 +36,13 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::post('imagepost/comment/add', 'ImagepostController@validateAddComment');
     Route::delete('imagepost/comment/delete/{id}', 'ImagepostController@delComment');
 
+
+    // scrap model's api
+    Route::post('scrap/upload', 'ScrapUploadController@upload');
+    Route::delete('scrap/tmp/delete', 'ScrapUploadController@deleteTmpFile');
+    Route::delete('scrap/delete/{id}', 'ScrapUploadController@deleteScFile');
+
+
     // bugreport model's api
     Route::get('bugreport','BugReportController@list');
     Route::get('bugreport/detail/{id}', 'BugReportController@detail');
