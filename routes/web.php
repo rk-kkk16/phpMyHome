@@ -69,7 +69,7 @@ Route::group(['middleware' => ['auth', 'can:user']], function() {
     // post add
     Route::post('/scrap/add', 'App\ScrapController@validateAdd');
     // post edit
-    //Route::post('/scrap/edit/{id}', 'App\ScrapController@validateEdit');
+    Route::post('/scrap/edit/{id}', 'App\ScrapController@validateEdit');
     // delete
     //Route::post('/scrap/delete/{id}', 'App\ScrapController@delete');
 

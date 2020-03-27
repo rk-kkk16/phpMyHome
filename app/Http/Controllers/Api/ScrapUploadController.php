@@ -114,6 +114,8 @@ class ScrapUploadController extends Controller
             ];
         }
 
+        $scfile->delete();
+
         $file_path = 'scrap/' . $scfile->id_range . '/' . $scfile->id . '.' . $scfile->file_type;
         $disk = Storage::disk('public');
         $disk->delete($file_path);

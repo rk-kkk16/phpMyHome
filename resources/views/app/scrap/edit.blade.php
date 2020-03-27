@@ -119,7 +119,6 @@
                         <th>アップロード済ファイル</th>
                     </tr><tr>
                         <td>
-                            todo ScFilesを並べて表示、削除ボタン
                             <div id="scfile_imgs"></div>
                             <div id="scfile_files"></div>
                         </td>
@@ -147,8 +146,10 @@ function chkUploadEnable() {
             + $('#uploaded_files>div').length
             + $('#scfile_imgs>div').length
             + $('#scfile_files>div').length;
-console.log(cnt);
-    if (max_upload - cnt > 0) {
+
+    let chked = $('input[name*="delfile"]:checked').length;
+
+    if (max_upload - cnt + chked > 0) {
         $('#upload_btn').prop('disabled', false);
     } else {
         $('#upload_btn').prop('disabled', true);
@@ -213,13 +214,58 @@ function makeUploadedDom(path, file_name, is_image) {
     chkUploadEnable();
 }
 
+// ScFileの表示
+function makeScFileDom(id, file_path, file_name, is_image, checked) {
+    var html = '<div>';
+    html += '<p>';
+    html += '<input type="checkbox" name="delfile[' + id + ']" value="' + id + '" id="delfile_' + id + '" ' + checked + ' onclick="chkUploadEnable()"><label for="delfile_' + id + '">削除</label> ';
+    if (is_image) {
+        html += '<img src="' + file_path + '" style="border:solid 1px #ccc; max-width:300px; max-height:300px;">';
+    } else {
+        html += '<i class="fas fa-file"></i> ' + file_name;
+    }
+    html += '</p>';
+    html += '</div>';
+    if (is_image) {
+        $('#scfile_imgs').append(html);
+    } else {
+        $('#scfile_files').append(html);
+    }
+    chkUploadEnable();
+}
+
 window.onload = function() {
     // アップロード済tmpファイルの表示処理
+    var uploadeds = [];
     @foreach ($uploads as $off => $upload)
-        let upload_str = '{{$upload}}';
-        let ary = upload_str.split(/;/g);
-        makeUploadedDom(ary[0], ary[1], ary[2]);
+        uploadeds.push('{{$upload}}');
     @endforeach
+    for (var i = 0; i < uploadeds.length; i++) {
+        let ary = uploadeds[i].split(/;/g);
+        makeUploadedDom(ary[0], ary[1], ary[2]);
+    }
+
+    // 編集時 ScFileの表示処理
+    @if ($post->id)
+        var scfiles = [];
+        @foreach ($post->files as $scfile)
+            scfiles.push({
+                id:{{$scfile->id}},
+                file_path:'/storage/scrap/{{$scfile->id_range}}/{{$post->id}}/{{$scfile->id}}.{{$scfile->file_type}}',
+                file_name:'{{$scfile->file_name}}',
+                is_image: {{$scfile->is_image}},
+            @if (isset($scfile_delchks[$scfile->id]))
+                chked:'checked',
+            @else
+                chked:'',
+            @endif
+            });
+        @endforeach
+        for (var i = 0; i < scfiles.length; i++) {
+            let scfile = scfiles[i];
+            makeScFileDom(scfile.id, scfile.file_path, scfile.file_name, scfile.is_image, scfile.chked);
+        }
+    @endif
 };
 
 </script>
