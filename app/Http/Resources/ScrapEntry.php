@@ -23,7 +23,7 @@ class ScrapEntry extends JsonResource
             'user_id' => $this->user_id,
             'user' => $this->user,
             'good_point' => $this->good_point,
-            'good_trx' => $this->good_trx,
+            'my_today_good_trx' => $this->my_today_good_trx,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

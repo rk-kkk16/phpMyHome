@@ -12,6 +12,7 @@ use App\Models\ScCategory;
 use App\Models\ScFile;
 use Storage;
 use Validator;
+use App\Support\Markdown;
 
 class ScrapController extends Controller
 {
@@ -22,6 +23,44 @@ class ScrapController extends Controller
     // index 仮おき
     public function index(Request $request) {
         return view('app.scrap.index', []);
+    }
+
+    // 投稿詳細表示
+    public function detail(Request $request) {
+        $id = $request->id;
+        $post = ScrapEntry::findOrfail($id);
+        $bodyhtml = Markdown::parse($post->body);
+
+        // 前後の投稿取得
+        // @todo 前画面から引き継いだカテゴリなどの条件を適用する
+        $query_next = ScrapEntry::query();
+        $query_before = ScrapEntry::query();
+        $query_next->where('id', '>', $id)->orderBy('id', 'asc');
+        $query_before->where('id', '<', $id)->orderBy('id', 'desc');
+        $nextpost = $query_next->limit(1)->first();
+        $beforepost = $query_before->limit(1)->first();
+
+        // アップロードファイルの仕訳
+        $imgs = array();
+        $files = array();
+        if (count($post->files) > 0) {
+            foreach ($post->files as $scfile) {
+                if ($scfile->is_image) {
+                    $imgs[] = $scfile;
+                } else {
+                    $files[] = $scfile;
+                }
+            }
+        }
+
+        return view('app.scrap.detail', [
+            'post' => $post,
+            'bodyhtml' => $bodyhtml,
+            'beforepost' => $beforepost,
+            'nextpost' => $nextpost,
+            'imgs' => $imgs,
+            'files' => $files,
+        ]);
     }
 
 
@@ -240,5 +279,35 @@ class ScrapController extends Controller
         }
 
         return redirect('/scrap/')->with('status', '投稿を追加しました。');
+    }
+
+
+    // 投稿削除
+    public function delete(Request $request) {
+        $id = $request->id;
+        // 自分の投稿でない場合は404
+        $post = ScrapEntry::query()->where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if (!$post) {
+            return \App::abort(404);
+        }
+
+        $scfiles = $post->files;
+
+        $post->delete();
+
+        // 関連するScComment ScFile ScGoodTrxを削除
+        $goodtrxs = ScGoodTrx::query()->where('scrap_entry_id', $id)->get();
+        foreach ($goodtrxs as $goodtrx) {
+            $goodtrx->delete();
+        }
+
+        // ScFileの削除 実ファイルも削除する
+        foreach ($scfiles as $scfile) {
+            $del_file_path = 'scrap/' . $scfile->id_range . '/' . $scfile->scrap_entry_id . '/' . $scfile->id . '.' . $scfile->file_type;
+            $scfile->delete();
+            $disk->delete($del_file_path);
+        }
+
+        return redirect('/scrap/')->with('status', '投稿を削除しました。');
     }
 }

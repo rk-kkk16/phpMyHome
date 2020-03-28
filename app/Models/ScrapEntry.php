@@ -22,7 +22,7 @@ class ScrapEntry extends Model
     }
 
     // 閲覧中ユーザーの今日のsc_good_trxsレコードと紐付ける
-    public function good_trx() {
+    public function my_today_good_trx() {
         return $this->hasOne('App\Models\ScGoodTrx', 'scrap_entry_id', 'id')
             ->where('user_id', Auth::user()->id)
             ->where('date_idx', date('Ymd'));
