@@ -19,9 +19,36 @@
                         </div>
                     @endif
 
+                    <div>
+                        <div style="float:left">{{$posts->links()}}</div>
+                        <a href="/scrap/add"><button type="button" class="btn btn-primary" style="float:right">＋</button></a>
+                        <br clear="both">
+                    </div>
+                    <div>投稿数：{{$posts->total()}}
+                        <!-- todo: 検索条件変更 -->
+                    </div>
 
-<p>工事中</p>
+                    <!-- todo: searchpanel -->
 
+                    <hr>
+
+                    @forelse ($posts as $post)
+                        <div class="card">
+                            <div class="card-header">
+                                <a href="/scrap/{{$post->id}}">
+                                    <span class="profimg prfmini" style="background-image:url(/users/icon/{{$post->user_id}})"></span> {{$post->subject}}
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <a href="/scrap/{{$post->id}}">本文</a>
+                            </div>
+                        </div>
+                    @empty
+                        <p>投稿はありません。</p>
+                    @endforelse
+
+                    <hr>
+                    <div>{{$posts->links()}}</div>
                 </div>
             </div>
         </div>

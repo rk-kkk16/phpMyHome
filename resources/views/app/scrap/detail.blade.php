@@ -78,7 +78,7 @@
                             @endif
 
                             <!-- body -->
-                            <div>
+                            <div id="bodyhtml">
                                 {{$bodyhtml}}
                             </div>
 
@@ -185,5 +185,52 @@ mw_activate_funcs['mw_cmntdelete'] = function(params) {
         alert('エラーが発生しました。');
     });
 }
+
+// #bodyhtmlからurl記述を取り出し、api問い合わせしてカード表示変換
+window.onload = function() {
+    var bodyhtmltext = $('#bodyhtml').text();
+    let url_mats = bodyhtmltext.match(/https?:\/\/[^\s]+/g);
+    if (url_mats) {
+        var urls = {};
+        for (var i = 0; i < url_mats.length; i++) {
+            let url = url_mats[i];
+            urls[url] = url;
+        }
+        for (var url in urls) {
+            axios.post('/api/scrap/urlinfo', {url:url})
+            .then(response => {
+                let linkinfo = response.data.data;
+                var dom_id = 'link_url_' + linkinfo.id;
+                var ogp_html = '<div id="' + dom_id + '">' + $('#tmpl-ogp-card').html() + '</div>';
+                var bodyhtml = $('#bodyhtml').html();
+                bodyhtml = bodyhtml.replace(linkinfo.url, ogp_html);
+                $('#bodyhtml').html(bodyhtml);
+
+                $('#' + dom_id + ' .ogp-url').attr('href', linkinfo.url);
+                $('#' + dom_id + ' .card-header').text(linkinfo.title);
+                if (linkinfo.description) {
+                    $('#' + dom_id + ' .card-body .ogp-desc').text(linkinfo.description);
+                }
+                if (linkinfo.image_url) {
+                    $('#' + dom_id + ' .card-body .ogp-img').html('<img src="' + linkinfo.image_url + '" style="max-width:300px;max-height:300px;border:solid 1px #ccc;margin-bottom:1em">');
+                }
+            });
+        }
+    }
+}
+
 </script>
+
+<!-- ogp情報カードテンプレ -->
+<div id="tmpl-ogp-card" style="display:none">
+    <a class="ogp-url" href="#" target="_blank">
+    <div class="card">
+        <div class="card-header"></div>
+        <div class="card-body">
+            <div class="ogp-img"></div>
+            <div class="ogp-desc"></div>
+        </div>
+    </div>
+    </a>
+</div>
 @endsection

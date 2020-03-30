@@ -41,13 +41,14 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::post('scrap/upload', 'ScrapUploadController@upload');
     Route::delete('scrap/tmp/delete', 'ScrapUploadController@deleteTmpFile');
     Route::delete('scrap/delete/{id}', 'ScrapUploadController@deleteScFile');
+    Route::post('scrap/urlinfo', 'ScrapController@urlInfo');
 
 
     // bugreport model's api
     Route::get('bugreport','BugReportController@list');
-    Route::get('bugreport/detail/{id}', 'BugReportController@detail');
     Route::post('bugreport/regist', 'BugReportController@validateRegist');
     Route::put('bugreport/regist', 'BugReportController@validateRegist');
+    Route::get('bugreport/detail/{id}', 'BugReportController@detail');
     Route::delete('bugreport/delete/{id}', 'BugReportController@delete');
     Route::put('bugreport/toggle/{id}/{newstate}', 'BugReportController@toggleState');
 

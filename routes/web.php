@@ -61,14 +61,13 @@ Route::group(['middleware' => ['auth', 'can:user']], function() {
 
     // Scrap
     Route::get('/scrap', 'App\ScrapController@index');
+    // add
+    Route::get('/scrap/add', 'App\ScrapController@add');
+    Route::post('/scrap/add', 'App\ScrapController@validateAdd');
     // detail
     Route::get('/scrap/{id}', 'App\ScrapController@detail');
-    // edit view
-    Route::get('/scrap/add', 'App\ScrapController@edit');
+    // edit
     Route::get('/scrap/edit/{id}', 'App\ScrapController@edit');
-    // post add
-    Route::post('/scrap/add', 'App\ScrapController@validateAdd');
-    // post edit
     Route::post('/scrap/edit/{id}', 'App\ScrapController@validateEdit');
     // delete
     Route::post('/scrap/delete/{id}', 'App\ScrapController@delete');

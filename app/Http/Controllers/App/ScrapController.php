@@ -10,6 +10,7 @@ use App\User;
 use App\Models\ScrapEntry;
 use App\Models\ScCategory;
 use App\Models\ScFile;
+use App\Models\ScGoodTrx;
 use Storage;
 use Validator;
 use App\Support\Markdown;
@@ -22,7 +23,10 @@ class ScrapController extends Controller
 
     // index 仮おき
     public function index(Request $request) {
-        return view('app.scrap.index', []);
+        $posts = ScrapEntry::query()->orderBy('id', 'desc')->paginate(10);
+        return view('app.scrap.index', [
+                    'posts' => $posts,
+                ]);
     }
 
     // 投稿詳細表示
@@ -63,18 +67,37 @@ class ScrapController extends Controller
         ]);
     }
 
+    // add view
+    public function add(Request $request) {
+        $post = new ScrapEntry();
+        $subject = old('subject', '');
+        $body = old('body', '');
+        $sc_category_id = old('sc_category_id', '');
+        $uploads = old('upload', []);
+        $categorys = ScCategory::all();
+
+        $scfile_delchks = old('delfile', []);
+
+        return view('app.scrap.edit', [
+            'post' => $post,
+            'subject' => $subject,
+            'body' => $body,
+            'sc_category_id' => $sc_category_id,
+            'uploads' => $uploads,
+            'categorys' => $categorys,
+            'max_upload_file' => 5,
+            'scfile_delchks' => $scfile_delchks,
+        ]);
+     }
 
     // edit view
     public function edit(Request $request) {
         // @todo index,detailからのパラメータ引継ぎ
 
-        $post = new ScrapEntry();
-        if (isset($request->id)) {
-            // 自分の投稿でない場合は404
-            $post = ScrapEntry::query()->where('id', $request->id)->where('user_id', Auth::user()->id)->first();
-            if (!$post) {
-                return \App::abort(404);
-            }
+        // 自分の投稿でない場合は404
+        $post = ScrapEntry::query()->where('id', $request->id)->where('user_id', Auth::user()->id)->first();
+        if (!$post) {
+            return \App::abort(404);
         }
 
         $subject = old('subject', $post->subject);
@@ -199,8 +222,7 @@ class ScrapController extends Controller
             }
         }
 
-        // todo 詳細画面作ったらそっちへリダイレクトするように
-        return redirect('/scrap/')->with('status', '投稿の編集を保存しました。');
+        return redirect('/scrap/' . $post->id)->with('status', '投稿の編集を保存しました。');
     }
 
     // 新規投稿 validate=>create
@@ -302,6 +324,7 @@ class ScrapController extends Controller
         }
 
         // ScFileの削除 実ファイルも削除する
+        $disk = Storage::disk('public');
         foreach ($scfiles as $scfile) {
             $del_file_path = 'scrap/' . $scfile->id_range . '/' . $scfile->scrap_entry_id . '/' . $scfile->id . '.' . $scfile->file_type;
             $scfile->delete();

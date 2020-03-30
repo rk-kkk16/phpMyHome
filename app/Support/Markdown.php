@@ -11,7 +11,7 @@ use Illuminate\Support\HtmlString;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
 use League\CommonMark\Ext\Table\TableExtension;
-use League\CommonMark\Ext\Autolink\AutolinkExtension;
+//use League\CommonMark\Ext\Autolink\AutolinkExtension;
 
 class Markdown
 {
@@ -27,7 +27,7 @@ class Markdown
         $environment = Environment::createCommonMarkEnvironment();
 
         $environment->addExtension(new TableExtension());
-        $environment->addExtension(new AutolinkExtension());
+        //$environment->addExtension(new AutolinkExtension());
 
         $converter = new CommonMarkConverter([
             'html_input'         => 'escape',

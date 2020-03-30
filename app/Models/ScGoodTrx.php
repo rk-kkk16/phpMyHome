@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ScGoodTrx extends Model
 {
+
+    protected $table = 'sc_good_trxs';
+
     public function user() {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
