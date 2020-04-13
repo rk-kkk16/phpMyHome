@@ -68,6 +68,9 @@
                                 <a class="nav-link" href="/imagepost">写真共有</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="https://rk-kkk16.github.io/compare/" target="_blank">価格比較 <i class="fas fa-external-link-alt"></i></a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/bugreport">不具合報告</a>
                             </li>
                             <li class="nav-item dropdown">
