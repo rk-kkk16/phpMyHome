@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 use App\Models\ScLinkInfo;
 use App\Http\Resources\ScLinkInfo as ScLinkInfoResource;
+use App\Models\ScCategory;
+use App\Http\Resources\ScCategory as ScCategoryResource;
 use Auth;
+use Validator;
 
 class ScrapController extends Controller
 {
@@ -70,4 +73,38 @@ class ScrapController extends Controller
         }
         return new ScLinkInfoResource($linkinfo);
     }
+
+
+    // カテゴリ登録
+    public function validateAddCategory(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|string|max:30',
+            'parent_category_id' => 'nullable|integer|exists:sc_categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = [];
+            if ($validator->errors()->has('category_name')) {
+                $errors['category_name'] = $validator->errors()->first('category_name');
+            }
+            if ($validator->errors()->has('parent_category_id')) {
+                $errors['parent_category_id'] = $validator->errors()->first('parent_category_id');   
+            }
+            return [
+                'result' => 'error',
+                'errors' => $errors,
+            ];
+        }
+
+        $category = new ScCategory();
+        $category->category_name = $request->category_name;
+        $category->user_id = Auth::user()->id;
+        if ($request->parent_category_id) {
+            $category->parent_category_id = $request->parent_category_id;
+            $category->depth = 2;
+        }
+        $category->save();
+        return new ScCategoryResource($category);
+    }
+
 }

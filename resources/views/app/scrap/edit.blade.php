@@ -65,10 +65,13 @@
                         <th>カテゴリ</th>
                     </tr><tr>
                         <td class="form-group">
-                            <select name="sc_category_id" class="form-control">
+                            <select name="sc_category_id" id="sc_category_id" class="form-control" style="margin-bottom:0.5em" onchange="switchChildChkArea()">
                                 @foreach ($categorys as $category)
                                     <option
                                         value="{{$category->id}}"
+                                        @if (!$category->is_primary)
+                                            data-type="top-category"
+                                        @endif
                                         @if ($category->id == $sc_category_id)
 
                                             selected
@@ -76,11 +79,55 @@
                                     >
                                         {{$category->category_name}}
                                     </option>
+                                    @if (count($category->childs) > 0)
+                                        @foreach ($category->childs as $child)
+                                            <option
+                                                value="{{$child->id}}"
+                                                @if ($child->id == $sc_category_id)
+
+                                                    selected
+                                                @endif
+                                            >
+                                                {{$category->category_name}} &gt; {{$child->category_name}}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                             </select>
                             @if ($errors->has('sc_category_id'))
                                 <p class="bg-danger">{{$errors->first('sc_category_id')}}</p>
                             @endif
+
+                            <p id="add-cate-area-opener">
+                                <a href="#" class="btn btn-link" onclick="$('#add-cate-area-opener').hide();$('#add-cate-area').show();return false;">
+                                    <i class="fas fa-plus"></i> カテゴリ追加
+                                </a>
+                            </p>
+                            <div id="add-cate-area" style="display:none" class="row">
+                                <div class="col-1">
+                                <a href="#" class="btn btn-link" onclick="$('#add-cate-area-opener').show();$('#add-cate-area').hide();return false;">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                                </div>
+
+                                <div class="col-11" style="padding-top:4px">
+                                    <div class="form-group">
+                                        <label>カテゴリ名</label>
+                                        <input type="text" id="new_category_name" class="form-control">
+                                        <p id="new_category_name_err" class="bg-danger" style="display:none"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <p id="child-chk-area" style="float:left"><label>
+                                            <input type="checkbox" id="is_child" value="1">子カテゴリ
+                                        </label></p>
+
+                                        <p style="float:right">
+                                            <button type="button" class="btn btn-secondary" onclick="postAddCategory()">カテゴリ登録</button>
+                                        </p>
+                                        <br clear="both">
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
 
@@ -267,6 +314,72 @@ window.onload = function() {
         }
     @endif
 };
+
+// 選択したカテゴリによってchild-chk-areaの表示/非表示切替
+function switchChildChkArea() {
+    let nowSelectedId = $('#sc_category_id').val();
+    $('#sc_category_id>option').each(function() {
+        if ($(this).prop('selected')) {
+            if ($(this).attr('data-type') == 'top-category') {
+                $('#child-chk-area').show();
+            } else {
+                $('#child-chk-area').hide();
+            }
+            return;
+        }
+    });
+}
+
+// カテゴリ追加POST送信
+function postAddCategory() {
+    $('#loading').removeClass('hidden');
+    $('#new_category_name_err').text('').hide();
+    var params = {category_name:$('#new_category_name').val()};
+    if ($('#child-chk-area').css('display') != 'none'
+        && $('#is_child').prop('checked')) {
+        params['parent_category_id'] = $('#sc_category_id').val();
+    }
+    axios.post('/api/scrap/category/add', params)
+    .then(function(response) {
+        if (response.data.result == 'error') {
+            if (typeof(response.data.errors.category_name) != 'undefined') {
+                $('#new_category_name_err').text(response.data.errors.category_name).show();
+            }
+            toastr.error('入力不備があります。');
+        } else {
+            let new_category_id = response.data.data.id;
+            let new_category_name = response.data.data.category_name;
+            var new_parent_id = 0;
+            if (response.data.data.parent_category_id) {
+                new_parent_id = response.data.data.parent_category_id;
+            }
+            $('#new_category_name').val('');
+            $('#is_child').prop('checked', false);
+            if (new_parent_id != 0) {
+                $('#sc_category_id>option').each(function() {
+                    if ($(this).attr('value') == new_parent_id) {
+                        let parent_category_name = $(this).text();
+                        let optionTag = '<option value="' + new_category_id + '">' + parent_category_name + ' &gt; ' + new_category_name + '</option>';
+                        $(this).after(optionTag);
+                        $('#sc_category_id').val(new_category_id);
+                        return;
+                    }
+                });
+            } else {
+                let optionTag = '<option value="' + new_category_id + '" data-type="top-category">' + new_category_name + '</option>';
+                $('#sc_category_id').append(optionTag);
+                $('#sc_category_id').val(new_category_id);
+            }
+            toastr.success('カテゴリ追加しました。');
+        }
+        $('#loading').addClass('hidden');
+    })
+    .catch(function(error) {
+        console.log(error);
+        alert('エラーが発生しました。');
+        $('#loading').addClass('hidden');
+    });
+}
 
 </script>
 @endsection

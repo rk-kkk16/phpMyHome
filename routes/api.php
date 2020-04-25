@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::delete('scrap/tmp/delete', 'ScrapUploadController@deleteTmpFile');
     Route::delete('scrap/delete/{id}', 'ScrapUploadController@deleteScFile');
     Route::post('scrap/urlinfo', 'ScrapController@urlInfo');
+    Route::post('scrap/category/add', 'ScrapController@validateAddCategory');
 
 
     // bugreport model's api

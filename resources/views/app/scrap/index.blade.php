@@ -43,6 +43,7 @@
                                 <a href="/scrap/{{$post->id}}">本文</a>
                             </div>
                         </div>
+                        <br>
                     @empty
                         <p>投稿はありません。</p>
                     @endforelse

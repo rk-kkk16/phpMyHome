@@ -74,7 +74,7 @@ class ScrapController extends Controller
         $body = old('body', '');
         $sc_category_id = old('sc_category_id', '');
         $uploads = old('upload', []);
-        $categorys = ScCategory::all();
+        $categorys = ScCategory::query()->where('depth', 1)->get();
 
         $scfile_delchks = old('delfile', []);
 
@@ -104,7 +104,7 @@ class ScrapController extends Controller
         $body = old('body', $post->body);
         $sc_category_id = old('sc_category_id', $post->sc_category_id);
         $uploads = old('upload', []);
-        $categorys = ScCategory::all();
+        $categorys = ScCategory::query()->where('depth', 1)->get();
 
         $scfile_delchks = old('delfile', []);
 
