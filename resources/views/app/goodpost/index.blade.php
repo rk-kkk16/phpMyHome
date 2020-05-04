@@ -170,44 +170,11 @@ function startTimer() {
         }
     }, 1000);
 }
+
+@if ($added_id)
+window.onload = function() {
+    mwOpen('mw_addpoint', 'mw_addpoint', {id:{{$added_id}}});
+};
+@endif
 </script>
-
-
-<style type="text/css">
-.good-txt {
-    border: solid 1px #ccc;
-    padding: 1em;
-    text-align: center;
-    vertical-align: middle;
-    font-weight: bold;
-    font-size: 120%;
-}
-
-.good-heart {
-    font-size: 250%;
-}
-
-.good-a {
-    text-decoration: none;
-}
-.good-a:hover {
-    text-decoration: underline;
-}
-.one-heart {
-    font-size:3em!important;
-}
-
-#cntdwn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    text-align: center;
-    vertical-align: middle;
-}
-#cntdwn>p {
-    color:red;
-    font-size: 3em;
-    font-weight: bold;
-}
-</style>
 @endsection

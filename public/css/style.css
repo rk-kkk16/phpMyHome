@@ -178,3 +178,44 @@
 .crumb {
     margin-bottom:0;
 }
+
+/** for goodpost **/
+.good-txt {
+    border: solid 1px #ccc;
+    padding: 1em;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.good-heart {
+    font-size: 250%;
+}
+
+.good-a {
+    text-decoration: none;
+}
+.good-a:hover {
+    text-decoration: underline;
+}
+.one-heart {
+    font-size:3em!important;
+}
+
+#cntdwn {
+    position: absolute;
+    top: 40%;
+    left: 48%;
+    text-align: center;
+    vertical-align: middle;
+}
+#cntdwn>p {
+    font-size: 3em;
+    font-weight: bold;
+}
+#limit-sec {
+    font-size: 2em;
+    font-weight: bold;
+}
+

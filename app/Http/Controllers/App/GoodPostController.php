@@ -18,7 +18,11 @@ class GoodPostController extends Controller
 
     public function index(Request $request) {
         $posts = GoodPost::query()->orderBy('id', 'desc')->paginate(10);
-        return view('app.goodpost.index', ['posts' => $posts]);
+        $added_id = (int)$request->input('added') ?: null;
+        return view('app.goodpost.index', [
+                        'posts' => $posts,
+                        'added_id' => $added_id,
+                    ]);
     }
 
 
