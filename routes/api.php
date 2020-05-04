@@ -36,6 +36,9 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::post('imagepost/comment/add', 'ImagepostController@validateAddComment');
     Route::delete('imagepost/comment/delete/{id}', 'ImagepostController@delComment');
 
+    // goodpost
+    Route::put('goodpost/addpoint/{id}', 'GoodPostController@addPoint');
+
     // bugreport model's api
     Route::get('bugreport','BugReportController@list');
     Route::get('bugreport/detail/{id}', 'BugReportController@detail');

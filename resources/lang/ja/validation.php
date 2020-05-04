@@ -123,5 +123,8 @@ return [
         // bugreport
         'subject' => '件名',
         'description' => '説明',
+        // good
+        'body' => '本文',
+        'to_user_id' => '宛先ユーザー',
     ],
 ];
