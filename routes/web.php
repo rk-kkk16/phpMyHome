@@ -58,6 +58,13 @@ Route::group(['middleware' => ['auth', 'can:user']], function() {
     Route::get('/imagepost/{id}/edit', 'App\ImagepostController@edit');
     Route::post('/imagepost/{id}/edit', 'App\ImagepostController@validateEdit');
 
+    // goodpost
+    // index
+    Route::get('/goodpost/', 'App\GoodPostController@index');
+    // add
+    Route::get('/goodpost/add', 'App\GoodPostController@add');
+    Route::post('/goodpost/add', 'App\GoodPostController@validateAdd');
+
 
     // BugReport
     Route::get('/bugreport', 'App\BugReportController@index');
