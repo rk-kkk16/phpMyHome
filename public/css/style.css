@@ -53,7 +53,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 500;
 }
 #loading img {
     position: absolute;
@@ -79,11 +79,11 @@
     position: fixed;
     top: 10%;
     left: 10%;
-    z-index: 12;
+    z-index: 412;
     display: none;
 }
 .modal-overlay {
-    z-index: 11;
+    z-index: 411;
     display: none;
     position: fixed;
     top: 0;
@@ -180,13 +180,27 @@
 }
 
 /** for goodpost **/
-.good-txt {
+.good-pallet {
+    position: relative;
+    width: 100%;
+    height: auto;
     border: solid 1px #ccc;
-    padding: 1em;
+}
+.good-pallet>.good-heart-mini {
+    position: absolute;
+    font-size: 1em;
+}
+
+.good-pallet>.good-txt {
+    position: absolute;
+    z-index: 300;
+    width: 100%;
+    padding: 0 1em;
+    margin-top: 50px;
+    margin-bottom: 50px;
     text-align: center;
-    vertical-align: middle;
     font-weight: bold;
-    font-size: 120%;
+    font-size: 180%;
 }
 
 .good-heart {
@@ -200,7 +214,7 @@
     text-decoration: underline;
 }
 .one-heart {
-    font-size:3em!important;
+    font-size:2em!important;
 }
 
 #cntdwn {

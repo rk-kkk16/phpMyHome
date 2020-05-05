@@ -38,21 +38,36 @@
                                 へ
                             </div>
                             <div class="card-body">
-                                <div class="good-txt">
-                                    {{$post->body}}
+                                <div id="good-pallet-{{$post->id}}" class="good-pallet">
+                                    <div class="good-txt">
+                                        {!!nl2br($post->body)!!}
+                                    </div>
                                 </div>
                                 <br>
                                 <p>
-                                    <a href="#" class="good-a" onclick="return false">
-                                    <span class="good-heart">
-                                        💞
-                                    </span>
-                                    × <span id="good-point-{{$post->id}}">{{number_format($post->total_good)}}</span>
-                                    </a>
                                     @if (!$post->myPoint)
-                                        <button id="good-btn-{{$post->id}}" class="btn btn-sm btn-primary" onclick="mwOpen('mw_addpoint', 'mw_addpoint', {id:{{$post->id}}});">ｲｲﾖ！！</button>
+                                        <button id="good-btn-{{$post->id}}" class="btn btn-sm btn-primary" style="margin-right:1em" onclick="mwOpen('mw_addpoint', 'mw_addpoint', {id:{{$post->id}}});">ｲｲﾖ！！</button>
                                     @endif
+
+                                    <a href="#" class="good-a" onclick="$('#good-point-detail-{{$post->id}}').slideToggle(); $('#good-point-btn-{{$post->id}}-a,#good-point-btn-{{$post->id}}-b').toggle(); return false">
+                                        <span class="good-heart">{{$heartStr}}</span>
+                                        × <span id="good-point-{{$post->id}}">{{$post->total_good}}</span>
+                                        <span id="good-point-btn-{{$post->id}}-a">▼</span>
+                                        <span id="good-point-btn-{{$post->id}}-b" style="display:none">▲</span>
+                                    </a>
                                 </p>
+                                <ul class="list-group" id="good-point-detail-{{$post->id}}" style="display:none;margin-bottom:1em;">
+                                @forelse ($post->points as $point)
+                                    <li class="list-group-item">
+                                        <span class="profimg prfmini" style="background-image:url(/users/icon/{{$point->user_id}})"></span> {{$point->user->name}}
+                                        　
+                                        💞 × {{$point->point}}
+                                    </li>
+                                @empty
+                                    <li class="list-group-item noitem">まだ誰もイイヨしてません。</li>
+                                @endforelse
+                                </ul>
+
                                 <p style="text-align:right"><i class="fas fa-calendar-alt"></i> {{date('Y/m/d H:i', strtotime($post->created_at))}}</p>
                             </div>
                         </div>
@@ -75,7 +90,7 @@
     <div class="modal-inner">
         <p>ボタンを連打してね！ あと <span id="limit-sec"></span>秒</p>
         <p style="text-align:center">
-            <button id="good-btn" disabled class="btn btn-lg btn-primary" onclick="increase()">💞 イイヨ！！</button>
+            <button id="good-btn" disabled class="btn btn-lg btn-primary" onclick="increase()">{{$heartStr}}イイヨ！！</button>
         </p>
         <div id="heart-area" style="position:relative; width:100%; height:43vh;border:solid 1px #ccc;">
         </div>
@@ -88,7 +103,7 @@ var now_sec = 0;
 var lcked = false;
 var tgt_post_id = null;
 var set_intval_id = null;
-let heart_str = '💞';
+let heart_str = '{{$heartStr}}';
 let count_down = 3;
 var now_count_down = 0;
 var set_intval_countdown_id = null;
@@ -127,7 +142,7 @@ function increase() {
         let newpoint = parseInt($('#heart_point').val()) + 1;
         $('#heart_point').val(newpoint);
         // #heart-areaの中にランダムにハートを書き込む
-        let zind = newpoint + 200;
+        let zind = newpoint + 100;
         let h_x = Math.floor(Math.random() * 100);
         let h_y = Math.floor(Math.random() * 100);
         let style_str = 'position:absolute; z-index:' + zind + '; left:' + h_x + '%; top:' + h_y + '%';
@@ -154,6 +169,13 @@ function startTimer() {
                 if (result.data.result == 'success') {
                     $('#good-point-' + tgt_post_id).text(result.data.new_point);
                     $('#good-btn-' + tgt_post_id).remove();
+                    setGoodHeart(tgt_post_id);
+
+                    // good-point-detailに自分を追加
+                    var detail = '<li class="list-group-item"><span class="profimg prfmini" style="background-image:url(/users/icon/' + result.data.your_id + ')"></span> ' + result.data.your_name + '　';
+                    detail += heart_str + ' × ' + result.data.you_added + '</li>';
+                    $('#good-point-detail-' + tgt_post_id + '>.noitem').remove();
+                    $('#good-point-detail-' + tgt_post_id).append(detail);
                     toastr.success('イイヨ！！');
                 }
                 else if (result.data.result == 'failure') {
@@ -171,10 +193,39 @@ function startTimer() {
     }, 1000);
 }
 
-@if ($added_id)
+// 表示時にテキスト表示パレット調整&ハート振りまき
+
+// テキスト表示パレットサイズ調整
+function fixGoodPalletSize(id) {
+    let oriHeight = $('#good-pallet-' + id + '>.good-txt').height();
+    $('#good-pallet-' + id).height(oriHeight + 100);
+}
+
+// ハート振りまき
+let zIndexBase = 100;
+function setGoodHeart(id) {
+    $('#good-pallet-' + id + '>.good-heart-mini').remove();
+    let heartCnt = parseInt($('#good-point-' + id).text());
+    for (var i = 0; i < heartCnt; i++) {
+        let zind = zIndexBase + i;
+        let h_x = Math.floor(Math.random() * 100);
+        let h_y = Math.floor(Math.random() * 100);
+        let html = '<div class="good-heart-mini" style="z-index: ' + zind + '; left: ' + h_x + '%; top: ' + h_y + '%;">' + heart_str + '</div>';
+        $('#good-pallet-' + id).append(html);
+    }
+}
+
+
 window.onload = function() {
-    mwOpen('mw_addpoint', 'mw_addpoint', {id:{{$added_id}}});
+    @if (session('added'))
+    mwOpen('mw_addpoint', 'mw_addpoint', {id:{{session('added')}}});
+    @endif
+
+    $('.good-pallet').each(function() {
+        let palletId = $(this).attr('id').replace('good-pallet-', '');
+        fixGoodPalletSize(palletId);
+        setGoodHeart(palletId);
+    });
 };
-@endif
 </script>
 @endsection

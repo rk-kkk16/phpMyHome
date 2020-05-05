@@ -46,6 +46,9 @@ class GoodPostController extends Controller
         return [
             'result' => 'success',
             'new_point' => $post->total_good,
+            'your_name' => Auth::user()->name,
+            'your_id' => Auth::user()->id,
+            'you_added' => $point,
         ];
     }
 }

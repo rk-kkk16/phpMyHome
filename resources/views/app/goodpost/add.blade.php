@@ -60,7 +60,7 @@
                         <th colspan="2">よかったこと(100文字以内)</th>
                     </tr><tr>
                         <td colspan="2" class="form-group">
-                            <textarea name="body" class="form-control">{{old('body', '')}}</textarea>
+                            <textarea name="body" class="form-control" style="height:25vh">{{old('body', '')}}</textarea>
                             @if ($errors->has('body'))
                                 <p class="bg-danger">{{$errors->first('body')}}</p>
                             @endif

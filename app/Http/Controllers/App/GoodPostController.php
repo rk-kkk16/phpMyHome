@@ -11,6 +11,8 @@ use App\User;
 
 class GoodPostController extends Controller
 {
+    private $heartStr = '💞';
+
     public function __construct() {
         $this->middleware('auth');
     }
@@ -22,6 +24,7 @@ class GoodPostController extends Controller
         return view('app.goodpost.index', [
                         'posts' => $posts,
                         'added_id' => $added_id,
+                        'heartStr' => $this->heartStr,
                     ]);
     }
 
@@ -56,6 +59,6 @@ class GoodPostController extends Controller
         $post->to_user_id = $request->to_user_id;
         $post->user_id = Auth::user()->id;
         $post->save();
-        return redirect('/goodpost/?added=' . $post->id)->with('status', '投稿しました。');
+        return redirect('/goodpost/?added=' . $post->id)->with('status', '投稿しました。')->with('added', $post->id);
     }
 }
