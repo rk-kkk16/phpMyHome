@@ -8,11 +8,21 @@ use Auth;
 use App\User;
 use App\Models\GoodPost;
 use App\Models\GoodPostPoint;
+use App\Http\Resources\GoodPost as GoodPostResource;
 
 class GoodPostController extends Controller
 {
     public function __construct() {
         $this->middleware('auth');
+    }
+
+    // 最新1件を取得
+    public function latestPost(Request $request) {
+        $post = GoodPost::query()->orderBy('id', 'desc')->first();
+        if (!$post) {
+            return \App::abort(404);
+        }
+        return new GoodPostResource($post);
     }
 
     public function addPoint(Request $request) {

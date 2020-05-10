@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::delete('imagepost/comment/delete/{id}', 'ImagepostController@delComment');
 
     // goodpost
+    Route::get('goodpost/latest', 'GoodPostController@latestPost');
     Route::put('goodpost/addpoint/{id}', 'GoodPostController@addPoint');
 
     // bugreport model's api
