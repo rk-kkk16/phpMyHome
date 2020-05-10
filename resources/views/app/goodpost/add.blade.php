@@ -25,7 +25,7 @@
                     @endif
 
 
-                    <form method="post" action="/goodpost/add?pre_page={{$pre_page}}">
+                    <form method="post" action="/goodpost/add?pre_page={{$pre_page}}" id="addfrm">
                     {{csrf_field()}}
                     <table class="table table-bordered table-striped table-hover">
                     <tbody>
@@ -69,7 +69,7 @@
                     </tbody>
                     </table>
 
-                    <div class="text-center"><button type="submit" class="btn btn-primary">投　稿</button></div>
+                    <div class="text-center"><button type="submit" class="btn btn-primary" onclick="$(this).prop('disabled', true); $('#addfrm').submit();">投　稿</button></div>
 
                     </form>
                 </div>
