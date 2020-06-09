@@ -9,6 +9,8 @@ use App\Models\ScLinkInfo;
 use App\Http\Resources\ScLinkInfo as ScLinkInfoResource;
 use App\Models\ScCategory;
 use App\Http\Resources\ScCategory as ScCategoryResource;
+use App\Models\ScComment;
+use App\Http\Resources\ScComment as ScCommentResource;
 use Auth;
 use Validator;
 
@@ -107,4 +109,57 @@ class ScrapController extends Controller
         return new ScCategoryResource($category);
     }
 
+    // コメントリスト取得
+    public function listComment(Request $request) {
+        $scrap_entry_id = (int)$request->scrap_entry_id ?: null;
+        $page = (int)$request->page ?: 1;
+        $num = (int)$request->num ?: 5;
+        $query = ScComment::query();
+        $query->where('scrap_entry_id', $scrap_entry_id);
+        $cmnts = $query->orderBy('id', 'desc')->paginate($num);
+        return ScCommentResource::collection($cmnts);
+    }
+
+    // 単体コメント取得
+    public function comment(Request $request) {
+        $id = (int)$request->id ?: null;
+        $cmnt = ScComment::findOrfail($id);
+        return new ScCommentResource($cmnt);
+    }
+
+    // コメントの投稿 validation=>insert
+    public function validateAddComment(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'scrap_entry_id' => 'required|integer|exists:scrap_entries,id',
+            'comment' => 'required|string|max:1000',
+        ]);
+        if ($validator->fails()) {
+            $errors = [];
+            if ($validator->errors()->has('scrap_entry_id')) {
+                $errors['scrap_entry_id'] = $validator->errors()->first('scrap_entry_id');
+            }
+            if ($validator->errors()->has('comment')) {
+                $errors['comment'] = $validator->errors()->first('comment');
+            }
+            return [
+                'result' => 'error',
+                'errors' => $errors,
+            ];
+        }
+        $cmnt = new ScComment();
+        $cmnt->scrap_entry_id = $request->scrap_entry_id;
+        $cmnt->comment = $request->comment;
+        $cmnt->user_id = Auth::user()->id;
+        $cmnt->save();
+
+        return new ScCommentResource($cmnt);
+    }
+
+    // コメントの削除
+    public function delComment(Request $request) {
+        $id = $request->id;
+        $cmnt = ScComment::findOrfail($id);
+        $cmnt->delete();
+        return new ScCommentResource($cmnt);
+    }
 }

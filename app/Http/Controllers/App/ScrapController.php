@@ -23,9 +23,75 @@ class ScrapController extends Controller
 
     // index 仮おき
     public function index(Request $request) {
-        $posts = ScrapEntry::query()->orderBy('id', 'desc')->paginate(10);
+        $num = 10;
+        // 検索条件
+        $keyword = $request->input('keyword') ?: null;
+        $category_id = $request->input('category_id') ?: null;
+        $nowcategory = null;
+        if ($category_id) {
+            $nowcategory = ScCategory::find($category_id);
+        }
+
+        if ($keyword || $nowcategory) {
+            $query = ScrapEntry::query();
+            if ($keyword) {
+                $keyword = trim($keyword);
+                $query->where('body', 'LIKE', '%'.$keyword.'%');
+                $query->orWhere('subject', 'LIKE', '%'.$keyword.'%');
+            }
+            if ($nowcategory && !$nowcategory->is_primary) {
+                $category_ids = [$nowcategory->id];
+                // 指定カテゴリの子カテゴリも検索対象
+                if (count($nowcategory->childs)) {
+                    foreach ($nowcategory->childs as $child) {
+                        $category_ids[] = $child->id;
+                    }
+                }
+                $query->whereIn('sc_category_id', $category_ids);
+            }
+            $posts = $query->orderBy('id', 'desc')->paginate($num);
+        } else {
+            $posts = ScrapEntry::query()->orderBy('id', 'desc')->paginate($num);
+        }
+
+        // postごとのdescriptionを作成
+        $descriptions = [];
+        foreach ($posts as $post) {
+            $desc = ['type' => 'text', 'data' => null];
+            if (count($post->files)) {
+                foreach ($post->files as $scfile) {
+                    if ($scfile->is_image) {
+                        $desc['type'] = 'image';
+                        $desc['data'] = $scfile;
+                        break;
+                    }
+                }
+            }
+            else if (preg_match('/(https?:\/\/[^\s]+)/', $post->body, $mat)) {
+                $url = $mat[1];
+                $desc['type'] = 'link';
+                $desc['data'] = $url;
+            } else {
+                $desc['data'] = mb_substr($post->body, 0, 30) . '…';
+            }
+            $descriptions[$post->id] = $desc;
+        }
+
+        $params = [];
+        if ($nowcategory) {
+            $params['category_id'] = $nowcategory->id;
+        }
+        if ($keyword) {
+            $params['keyword'] = $keyword;
+        }
         return view('app.scrap.index', [
                     'posts' => $posts,
+                    'descriptions' => $descriptions,
+                    'nowcategory' => $nowcategory,
+                    'category_id' => $category_id,
+                    'keyword' => $keyword,
+                    'params' => $params,
+                    'categorys' => ScCategory::query()->where('depth', 1)->get(),
                 ]);
     }
 

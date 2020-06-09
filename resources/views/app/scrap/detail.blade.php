@@ -105,7 +105,7 @@
                             </div>
 
                             <div>
-                                comment!
+                                <scrap-comment :num=5 :scrap_entry_id="{{$post->id}}" :myuser_id="{{Auth::user()->id}}" ref="sccmnt"/>
                             </div>
                         </div>
                     </div>
@@ -163,7 +163,7 @@
     <pre id="mw_cmntdelete_txt"></pre>
     <br>
     <p style="width:100%;text-align:center">
-        <button class="btn btn-primary" onclick="app.__vue__.$refs.impcmnt.deleteComment($('#mw_cmntdelete_id').val());mwClose('mw_cmntdelete');">　O K　</button>
+        <button class="btn btn-primary" onclick="app.__vue__.$refs.sccmnt.deleteComment($('#mw_cmntdelete_id').val());mwClose('mw_cmntdelete');">　O K　</button>
         <button class="btn btn-secondary" onclick="mwClose('mw_cmntdelete')">Cancel</button>
     </p>
     </div>
