@@ -1,6 +1,11 @@
 @if ($paginator->hasPages())
     <nav>
         <ul class="pagination flex-wrap">
+            {{-- First Page Link --}}
+            <li class="page-item {{ $paginator->onFirstPage() ? ' disabled' : '' }}">
+                <a class="page-link" href="{{ $paginator->url(1) }}">&laquo;</a>
+            </li>
+
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
@@ -12,24 +17,33 @@
                 </li>
             @endif
 
-            {{-- Pagination Elements --}}
-            @foreach ($elements as $element)
-                {{-- "Three Dots" Separator --}}
-                @if (is_string($element))
-                    <li class="page-item disabled" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>
-                @endif
 
-                {{-- Array Of Links --}}
-                @if (is_array($element))
-                    @foreach ($element as $page => $url)
-                        @if ($page == $paginator->currentPage())
-                            <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
-                        @else
-                            <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                        @endif
-                    @endforeach
+            {{-- calc start&end page no --}}
+            @if ($paginator->lastPage() > config('const.PAGINATE.LINK_NUM'))
+                @if ($paginator->currentPage() <= floor(config('const.PAGINATE.LINK_NUM') / 2))
+                    <?php $start_page = 1; ?>
+                    <?php $end_page = config('const.PAGINATE.LINK_NUM'); ?>
+                @elseif ($paginator->currentPage() > $paginator->lastPage() - floor(config('const.PAGINATE.LINK_NUM') / 2))
+                    <?php $start_page = $paginator->lastPage() - (config('const.PAGINATE.LINK_NUM') - 1); ?>
+                    <?php $end_page = $paginator->lastPage(); ?>
+                @else
+                    <?php $start_page = $paginator->currentPage() - (floor((config('const.PAGINATE.LINK_NUM') % 2 == 0 ? config('const.PAGINATE.LINK_NUM') - 1 : config('const.PAGINATE.LINK_NUM'))  / 2)); ?>
+                    <?php $end_page = $paginator->currentPage() + floor(config('const.PAGINATE.LINK_NUM') / 2); ?>
                 @endif
-            @endforeach
+            @else
+                <?php $start_page = 1; ?>
+                <?php $end_page = $paginator->lastPage(); ?>
+            @endif
+
+            {{-- Pagination Main View --}}
+            @for ($i = $start_page; $i <= $end_page; $i++)
+                @if ($i == $paginator->currentPage())
+                    <li class="page-item active"><span class="page-link">{{ $i }}</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $paginator->url($i) }}">{{ $i }}</a></li>
+                @endif
+            @endfor
+
 
             {{-- Next Page Link --}}
             @if ($paginator->hasMorePages())
@@ -41,6 +55,11 @@
                     <span class="page-link" aria-hidden="true">&rsaquo;</span>
                 </li>
             @endif
+
+            {{-- Last Page Link --}}
+            <li class="page-item {{ $paginator->currentPage() == $paginator->lastPage() ? ' disabled' : '' }}">
+                <a class="page-link" href="{{ $paginator->url($paginator->lastPage()) }}">&raquo;</a>
+            </li>
         </ul>
     </nav>
 @endif
