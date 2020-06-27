@@ -98,7 +98,15 @@
                             <br>
                             @endif
 
-                            <p style="text-align:right"><i class="fas fa-calendar-alt"></i> {{date('Y/m/d H:i', strtotime($post->created_at))}}</p>
+                            <p style="text-align:right">
+                                <i class="fa fa-list-alt"></i>
+                                @if ($post->category->parentCategory)
+                                    {{$post->category->parentCategory->category_name}} &gt;
+                                @endif
+                                {{$post->category->category_name}}
+                                <br>
+                                <i class="fas fa-calendar-alt"></i> {{date('Y/m/d H:i', strtotime($post->created_at))}}
+                            </p>
 
                             <div>
                                 goodpoint!

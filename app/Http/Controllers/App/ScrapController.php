@@ -399,4 +399,86 @@ class ScrapController extends Controller
 
         return redirect('/scrap/')->with('status', '投稿を削除しました。');
     }
+
+
+    // カテゴリ管理
+    public function categories(Request $request) {
+        $categorys = ScCategory::query()->where('depth', 1)->get();
+        return view('app.scrap.categories', [
+            'categories' => $categorys,
+        ]);
+    }
+
+    // カテゴリ削除
+    public function deleteCategory(Request $request) {
+        $id = (int)$request->id ?: null;
+        $category = ScCategory::find($id);
+        $delok = false;
+        if ($category) {
+            // 属する投稿の有無を確認 存在する場合は削除不可
+            $query = ScrapEntry::query();
+            $query->where('sc_category_id', $id);
+            $entry = $query->limit(1)->first();
+            if (!$entry) {
+                $delok = true;
+            }
+        }
+
+        if ($delok) {
+            $category->delete();
+            return redirect('/scrap/categories')->with('status', 'カテゴリを削除しました。');
+        } else {
+            return redirect('/scrap/categories')->with('error', '投稿のあるカテゴリは削除できません。');
+        }
+    }
+
+    // カテゴリ編集
+    public function validateEditCategory(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|string|max:30',
+            'id' => 'required|integer|exists:sc_categories,id',
+        ]);
+        if ($validator->fails()) {
+            $errors = [];
+            if ($validator->errors()->has('category_name')) {
+                $errors['category_name'] = $validator->errors()->first('category_name');
+            }
+            $errmsg = implode("\n", $errors);
+            return redirect()->with('error', $errmsg);
+        }
+        $category = ScCategory::find($request->id);
+        $category->category_name = $request->category_name;
+        $category->save();
+        return redirect('/scrap/categories')->with('status', '変更を保存しました。');
+    }
+
+    // カテゴリ追加
+    public function validateAddCategory(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'category_name' => 'required|string|max:30',
+            'parent_category_id' => 'nullable|integer|exists:sc_categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = [];
+            if ($validator->errors()->has('category_name')) {
+                $errors['category_name'] = $validator->errors()->first('category_name');
+            }
+            if ($validator->errors()->has('parent_category_id')) {
+                $errors['parent_category_id'] = $validator->errors()->first('parent_category_id');
+            }
+            $errmsg = implode("\n", $errors);
+            return redirect()->with('error', $errmsg);
+        }
+        $category = new ScCategory();
+        $category->category_name = $request->category_name;
+        $category->user_id = Auth::user()->id;
+        if ($request->parent_category_id) {
+            $category->parent_category_id = $request->parent_category_id;
+            $category->depth = 2;
+        }
+        $category->save();
+        return redirect('/scrap/categories')->with('status', 'カテゴリを追加しました。');
+    }
+
 }

@@ -21,7 +21,10 @@
 
                     <div>
                         <div style="float:left">{{$posts->appends($params)->links()}}</div>
-                        <a href="/scrap/add"><button type="button" class="btn btn-primary" style="float:right">＋</button></a>
+                        <div style="float:right">
+                            <a href="/scrap/categories"><button type="button" class="btn btn-secondary" style="padding:2px 10px"><i class="fa fa-list-alt"></i></button></a>
+                            <a href="/scrap/add"><button type="button" class="btn btn-primary" style="padding:2px 10px;margin-left:0.8em">＋</button></a>
+                        </div>
                         <br clear="both">
                     </div>
                     <div>投稿数：{{$posts->total()}}
@@ -101,6 +104,16 @@
                                         {{$descriptions[$post->id]['data']}}
                                     @endif
                                 </a>
+
+                                <p style="text-align:right">
+                                    <i class="fa fa-list-alt"></i>
+                                    @if ($post->category->parentCategory)
+                                        {{$post->category->parentCategory->category_name}} &gt;
+                                    @endif
+                                    {{$post->category->category_name}}
+                                    <br>
+                                    <i class="fas fa-calendar-alt"></i> {{date('Y/m/d H:i', strtotime($post->created_at))}}
+                                </p>
                             </div>
                         </div>
                         <br>
