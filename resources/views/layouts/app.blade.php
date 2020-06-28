@@ -15,15 +15,15 @@
             'apiToken' => \Auth::user()->api_token ?? null
         ]) !!};
     </script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js?t=' . date('Ymd')) }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css?t=' . date('Ymd')) }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css?t=' . date('Ymd')) }}" rel="stylesheet">
 
     <!-- favicon -->
     <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
@@ -69,6 +69,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/goodpost">イイヨ！！</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/scrap">スクラップブック</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="https://rk-kkk16.github.io/compare/" target="_blank">価格比較 <i class="fas fa-external-link-alt"></i></a>
