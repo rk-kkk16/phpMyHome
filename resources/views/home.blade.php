@@ -24,6 +24,10 @@
 
                     <br>
 
+                    <dash-goodpost></dash-goodpost>
+
+                    <br>
+
                     <dash-imagepost></dash-imagepost>
                 </div>
             </div>

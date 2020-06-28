@@ -48,6 +48,9 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::post('scrap/comment/add', 'ScrapController@validateAddComment');
     Route::delete('scrap/comment/delete/{id}', 'ScrapController@delComment');
 
+    // goodpost
+    Route::get('goodpost/latest', 'GoodPostController@latestPost');
+    Route::put('goodpost/addpoint/{id}', 'GoodPostController@addPoint');
 
     // bugreport model's api
     Route::get('bugreport','BugReportController@list');

@@ -126,5 +126,8 @@ return [
         // scrap
         'category_name' => 'カテゴリ名',
         'body' => '本文',
+        // good
+        'body' => '本文',
+        'to_user_id' => '宛先ユーザー',
     ],
 ];

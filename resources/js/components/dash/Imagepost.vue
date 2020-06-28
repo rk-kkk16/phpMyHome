@@ -1,6 +1,6 @@
 <template>
 <section id="dash-imagepost" class="card">
-    <div class="card-header">写真共有</div>
+    <div class="card-header"><a href="/imagepost">写真共有</a></div>
     <div class="card-body">
         <div id="dash-imp-loading" style="text-align:center;width:60%;"><img src="/css/loading.gif"></div>
 

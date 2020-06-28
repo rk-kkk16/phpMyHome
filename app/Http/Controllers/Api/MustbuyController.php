@@ -28,8 +28,8 @@ class MustbuyController extends Controller
         $num = (int)$request->num ?: 15;
 
         $query = Mustbuy::query();
-        $query->orWhere('state', $state);
-        $query->orderBy($sort_key, $sort_order);
+        $query->where('state', $state);
+        $query->orderBy($sort_key, $sort_order)->orderBy('id', 'desc');
 
         $mustbuys = $query->paginate($num);
 

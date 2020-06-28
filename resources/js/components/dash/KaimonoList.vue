@@ -1,6 +1,6 @@
 <template>
 <section id="dash-kaimono" class="card">
-    <div class="card-header">買い物リスト</div>
+    <div class="card-header"><a href="/kaimono">買い物リスト</a></div>
     <div class="card-body">
         <div id="dash-kaimono-loading" style="text-align:center;width:60%;"><img src="/css/loading.gif"></div>
         <table class="table table-bordered"><tbody>
