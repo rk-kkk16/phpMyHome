@@ -66,6 +66,25 @@ Route::group(['middleware' => ['auth', 'can:user']], function() {
     Route::post('/goodpost/add', 'App\GoodPostController@validateAdd');
 
 
+    // Scrap
+    Route::get('/scrap', 'App\ScrapController@index');
+    // add
+    Route::get('/scrap/add', 'App\ScrapController@add');
+    Route::post('/scrap/add', 'App\ScrapController@validateAdd');
+    // categories
+    Route::get('/scrap/categories', 'App\ScrapController@categories');
+    Route::post('/scrap/categories/add', 'App\ScrapController@validateAddCategory');
+    Route::post('/scrap/categories/edit', 'App\ScrapController@validateEditCategory');
+    Route::post('/scrap/categories/delete', 'App\ScrapController@deleteCategory');
+    // detail
+    Route::get('/scrap/{id}', 'App\ScrapController@detail');
+    // edit
+    Route::get('/scrap/edit/{id}', 'App\ScrapController@edit');
+    Route::post('/scrap/edit/{id}', 'App\ScrapController@validateEdit');
+    // delete
+    Route::post('/scrap/delete/{id}', 'App\ScrapController@delete');
+
+
     // BugReport
     Route::get('/bugreport', 'App\BugReportController@index');
 

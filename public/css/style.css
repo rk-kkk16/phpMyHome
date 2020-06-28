@@ -109,6 +109,16 @@
 .modal-active {
 }
 
+.li-left {
+    float: left;
+    width: calc(100% - 150px);
+}
+.li-right {
+    text-align: right;
+    float: right;
+    width: 140px;
+}
+
 /** スイッチ **/
 /* === ボタンを表示するエリア ============================== */
 .switchArea {

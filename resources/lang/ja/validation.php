@@ -121,8 +121,11 @@ return [
         'score' => '評価',
         'comment' => 'コメント',
         // bugreport
-        'subject' => '件名',
+        'subject' => 'タイトル',
         'description' => '説明',
+        // scrap
+        'category_name' => 'カテゴリ名',
+        'body' => '本文',
         // good
         'body' => '本文',
         'to_user_id' => '宛先ユーザー',
