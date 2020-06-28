@@ -220,7 +220,7 @@ window.onload = function() {
                     $('#' + dom_id + ' .card-body .ogp-desc').text(linkinfo.description);
                 }
                 if (linkinfo.image_url) {
-                    $('#' + dom_id + ' .card-body .ogp-img').html('<img src="' + linkinfo.image_url + '" style="max-width:300px;max-height:300px;border:solid 1px #ccc;margin-bottom:1em">');
+                    $('#' + dom_id + ' .card-body .ogp-img').html('<img src="' + linkinfo.image_url + '" style="width:100%;max-width:300px;max-height:300px;border:solid 1px #ccc;margin-bottom:1em">');
                 }
             });
         }
