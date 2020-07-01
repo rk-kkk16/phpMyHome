@@ -79,7 +79,7 @@
 
                             <!-- body -->
                             <div id="bodyhtml">
-                                {{$bodyhtml}}
+                                {!!nl2br($bodyhtml)!!}
                             </div>
 
 

@@ -99,7 +99,7 @@ class ScrapController extends Controller
     public function detail(Request $request) {
         $id = $request->id;
         $post = ScrapEntry::findOrfail($id);
-        $bodyhtml = Markdown::parse($post->body);
+        $bodyhtml = $post->body; //Markdown::parse($post->body);
 
         // 前後の投稿取得
         // @todo 前画面から引き継いだカテゴリなどの条件を適用する
