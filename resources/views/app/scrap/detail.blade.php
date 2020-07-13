@@ -12,12 +12,19 @@
                     <div>
                     <p class="crumb" style="float:left"><a href="/scrap/">&lt; スクラップブック</a></p>
 
-                    @if (Auth::user()->id == $post->user_id)
                     <p style="float:right">
                         <a href="/scrap/edit/{{$post->id}}"><button class="btn btn-primary" style="padding:2px 10px"><i class="far fa-edit"></i></button></a>
-                        <button class="btn btn-danger" style="padding:2px 10px;margin-left:0.8em" onclick="mwOpen('mw_delete')"><i class="fas fa-trash"></i></button>
+                        <button
+                            class="btn btn-danger"
+                            style="padding:2px 10px;margin-left:0.8em"
+                            onclick="mwOpen('mw_delete')"
+                            @if (Auth::user()->id != $post->user_id)
+                                disabled
+                            @endif
+                        >
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </p>
-                    @endif
                     <br clear="both">
                     </div>
 

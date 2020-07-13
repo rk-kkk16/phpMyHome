@@ -160,8 +160,8 @@ class ScrapController extends Controller
     public function edit(Request $request) {
         // @todo index,detailからのパラメータ引継ぎ
 
-        // 自分の投稿でない場合は404
-        $post = ScrapEntry::query()->where('id', $request->id)->where('user_id', Auth::user()->id)->first();
+        // 自分以外の投稿でも編集可能に 投稿が存在しない場合は404
+        $post = ScrapEntry::query()->where('id', $request->id)->first();
         if (!$post) {
             return \App::abort(404);
         }
@@ -190,8 +190,8 @@ class ScrapController extends Controller
     // 編集投稿 validate=>save
     public function validateEdit(Request $request) {
         $id = $request->id;
-        // 自分の投稿でない場合は404
-        $post = ScrapEntry::query()->where('id', $id)->where('user_id', Auth::user()->id)->first();
+        // 投稿が存在しない場合は404
+        $post = ScrapEntry::query()->where('id', $id)->first();
         if (!$post) {
             return \App::abort(404);
         }
