@@ -14,6 +14,8 @@ use App\Models\ScGoodTrx;
 use Storage;
 use Validator;
 use App\Support\Markdown;
+use Illuminate\Support\Facades\Config;
+
 
 class ScrapController extends Controller
 {
@@ -130,6 +132,7 @@ class ScrapController extends Controller
             'nextpost' => $nextpost,
             'imgs' => $imgs,
             'files' => $files,
+            'thumbs' => Config::get('app_scrap.thumbs'),
         ]);
     }
 

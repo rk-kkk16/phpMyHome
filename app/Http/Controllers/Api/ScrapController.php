@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\ScrapEntry;
+use App\Models\ScGoodTrx;
 use App\Models\ScLinkInfo;
 use App\Http\Resources\ScLinkInfo as ScLinkInfoResource;
 use App\Models\ScCategory;
@@ -161,5 +163,51 @@ class ScrapController extends Controller
         $cmnt = ScComment::findOrfail($id);
         $cmnt->delete();
         return new ScCommentResource($cmnt);
+    }
+
+
+    // GoodPoint関連
+    // 1投稿について現在のscrap_entry.good_point値と今日自分がその投稿に対してgoodを押したかどうかを返す
+    public function getGoodStatus(Request $request) {
+        $id = $request->id;
+        $post = ScrapEntry::findOrfail($id);
+        $today_trx = ScGoodTrx::query()
+                    ->where('user_id', Auth::user()->id)
+                    ->where('date_idx', date('Ymd'))
+                    ->where('scrap_entry_id', $id)
+                    ->first();
+        return [
+            'total_point' => $post->good_point,
+            'pushed_today' => ($today_trx) ? true : false,
+        ];
+    }
+
+    // 指定投稿についてgoodをつける
+    // 本日分ScGoodTrxレコードの存在確認=>なければレコード生成=>good_point+1
+    public function addGoodPoint(Request $request) {
+        $id = $request->id;
+        $user_id = Auth::user()->id;
+        $post = ScrapEntry::findOrfail($id);
+        $today_trx = ScGoodTrx::query()
+                    ->where('user_id', $user_id)
+                    ->where('date_idx', date('Ymd'))
+                    ->where('scrap_entry_id', $id)
+                    ->first();
+
+        if (!$today_trx) {
+            $today_trx = new ScGoodTrx();
+            $today_trx->scrap_entry_id = $id;
+            $today_trx->user_id = $user_id;
+            $today_trx->date_idx = date('Ymd');
+            $today_trx->save();
+
+            $post->good_point += 1;
+            $post->save();
+        }
+
+        return [
+            'total_point' => $post->good_point,
+            'pushed_today' => true,
+        ];
     }
 }

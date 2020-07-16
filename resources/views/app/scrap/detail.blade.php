@@ -116,8 +116,9 @@
                             </p>
 
                             <div>
-                                goodpoint!
+                                <scrap-good-point :post_id="{{$post->id}}" :user_id="{{Auth::user()->id}}" :thumbs="{{json_encode($thumbs)}}"/>
                             </div>
+                            <br>
 
                             <div>
                                 <scrap-comment :num=5 :scrap_entry_id="{{$post->id}}" :myuser_id="{{Auth::user()->id}}" ref="sccmnt"/>
