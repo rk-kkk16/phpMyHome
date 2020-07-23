@@ -16,9 +16,9 @@
 
                 <div class="card-body">
                     <p class="crumb">
-                        <a href="/scrap/">&lt; スクラップブック</a>
+                        <a href="/scrap/?{{$paramstr}}">&lt; スクラップブック</a>
                         @if ($post->id)
-                            <a href="/scrap/{{$post->id}}">&lt; 投稿</a>
+                            <a href="/scrap/{{$post->id}}?{{$in_paramstr}}">&lt; 投稿</a>
                         @endif
                     </p>
 
@@ -41,9 +41,9 @@
 
                     <form method="post"
                         @if ($post->id)
-                            action="/scrap/edit/{{$post->id}}"
+                            action="/scrap/edit/{{$post->id}}?{{$in_paramstr}}"
                         @else
-                            action="/scrap/add"
+                            action="/scrap/add?{{$in_paramstr}}"
                         @endif
                     >
                     {{csrf_field()}}

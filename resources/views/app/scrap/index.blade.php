@@ -20,14 +20,15 @@
                     @endif
 
                     <div>
-                        <div style="float:left">{{$posts->appends($params)->links()}}</div>
                         <div style="float:right">
                             <a href="/scrap/categories"><button type="button" class="btn btn-secondary" style="padding:2px 10px"><i class="fa fa-list-alt"></i></button></a>
-                            <a href="/scrap/add"><button type="button" class="btn btn-primary" style="padding:2px 10px;margin-left:0.8em">＋</button></a>
+                            <a href="/scrap/add?{{$in_paramstr}}"><button type="button" class="btn btn-primary" style="padding:2px 10px;margin-left:0.8em">＋</button></a>
                         </div>
+                        <div>{{$posts->appends($params)->links()}}</div>
                         <br clear="both">
                     </div>
-                    <div>投稿数：{{$posts->total()}}
+                    <div>
+                        投稿数：{{$posts->total()}}
                         <button class="btn btn-link" onclick="$('#srch').slideToggle();">
                             @if ($keyword)
                                 キーワード:{{$keyword}}
@@ -42,6 +43,7 @@
                     <!-- search panel -->
                     <div id="srch" style="display:none;margin-top:1em">
                         <form method="get" action="/scrap">
+                        <input type="hidden" name="ord" value="{{$params['ord']}}">
                         <table class="table"><tbody>
                             <tr>
                                 <th>キーワード</th>
@@ -84,18 +86,39 @@
                         </form>
                     </div>
                     <!-- /search panel -->
+                    <div style="text-align:right; margin-right:1em">
+                        <a style="padding:5px 10px"
+                            @if ($params['ord'] == 'id')
+                                class="link-btn active" href="javascript:void(0)"
+                            @else
+                                class="link-btn" href="/scrap?ord=id{{$paramstr}}"
+                            @endif
+                        >
+                            ▼<i class="fas fa-calendar-alt"></i>
+                        </a>
+                        <a
+                            style="margin-left:0.8em;padding:5px 10px"
+                            @if ($params['ord'] == 'good_point')
+                                class="link-btn active" href="javascript:void(0)"
+                            @else
+                                class="link-btn" href="/scrap?ord=good_point{{$paramstr}}"
+                            @endif
+                        >
+                            ▼<i class="fa fa-thumbs-up"></i>
+                        </a>
+                    </div>
 
                     <hr>
 
                     @forelse ($posts as $post)
                         <div class="card">
                             <div class="card-header">
-                                <a href="/scrap/{{$post->id}}">
+                                <a href="/scrap/{{$post->id}}?{{$in_paramstr}}">
                                     <span class="profimg prfmini" style="background-image:url(/users/icon/{{$post->user_id}})"></span> {{$post->subject}}
                                 </a>
                             </div>
                             <div class="card-body">
-                                <a href="/scrap/{{$post->id}}">
+                                <a href="/scrap/{{$post->id}}?{{$in_paramstr}}">
                                     @if ($descriptions[$post->id]['type'] == 'image')
                                         <img src="/storage/scrap/{{$descriptions[$post->id]['data']->id_range}}/{{$descriptions[$post->id]['data']->scrap_entry_id}}/{{$descriptions[$post->id]['data']->id}}.{{$descriptions[$post->id]['data']->file_type}}" style="border:solid 1px #ccc; width:100%; max-width:400px">
                                     @elseif ($descriptions[$post->id]['type'] == 'link')

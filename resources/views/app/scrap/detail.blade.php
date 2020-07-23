@@ -10,10 +10,10 @@
 
                 <div class="card-body">
                     <div>
-                    <p class="crumb" style="float:left"><a href="/scrap/">&lt; スクラップブック</a></p>
+                    <p class="crumb" style="float:left"><a href="/scrap/?{{$paramstr}}">&lt; スクラップブック</a></p>
 
                     <p style="float:right">
-                        <a href="/scrap/edit/{{$post->id}}"><button class="btn btn-primary" style="padding:2px 10px"><i class="far fa-edit"></i></button></a>
+                        <a href="/scrap/edit/{{$post->id}}?{{$in_paramstr}}"><button class="btn btn-primary" style="padding:2px 10px"><i class="far fa-edit"></i></button></a>
                         <button
                             class="btn btn-danger"
                             style="padding:2px 10px;margin-left:0.8em"
@@ -130,7 +130,7 @@
                         <!-- @todo next&before post -->
                         @if ($nextpost)
                             <div style="float:left">
-                                <a href="/scrap/{{$nextpost->id}}">
+                                <a href="/scrap/{{$nextpost->id}}?{{$in_paramstr}}">
                                 <button class="btn btn-link">
                                     &lt; {{mb_substr($nextpost->subject, 0, 10)}}…
                                 </button></a>
@@ -140,7 +140,7 @@
 
                         @if ($beforepost)
                             <div style="float:right">
-                                <a href="/scrap/{{$beforepost->id}}">
+                                <a href="/scrap/{{$beforepost->id}}?{{$in_paramstr}}">
                                 <button class="btn btn-link">
                                     {{mb_substr($beforepost->subject, 0, 10)}}… &gt;
                                 </button></a>
@@ -159,7 +159,7 @@
 <!-- 削除確認modal -->
 <div id="mw_delete" class="modal-overlay">
     <div class="modal-inner">
-    <form action="/scrap/delete/{{$post->id}}" method="post">
+    <form action="/scrap/delete/{{$post->id}}?{{$in_paramstr}}" method="post">
     {{csrf_field()}}
     <p>この投稿を削除します。よろしいですか？</p>
     <br>
