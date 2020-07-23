@@ -47,6 +47,8 @@ Route::group(['middleware' => 'auth:api', 'namespace' => 'Api'], function() {
     Route::get('scrap/comment/{id}', 'ScrapController@comment');
     Route::post('scrap/comment/add', 'ScrapController@validateAddComment');
     Route::delete('scrap/comment/delete/{id}', 'ScrapController@delComment');
+    Route::get('scrap/goodpoint/status/{id}', 'ScrapController@getGoodStatus');
+    Route::put('scrap/goodpoint/add/{id}', 'ScrapController@addGoodPoint');
 
     // goodpost
     Route::get('goodpost/latest', 'GoodPostController@latestPost');

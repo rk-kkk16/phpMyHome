@@ -39,6 +39,7 @@ import ImagepostEval from './components/ImagepostEval';
 import ImagepostComment from './components/ImagepostComment';
 import DashImagepost from './components/dash/Imagepost';
 import ScrapComment from './components/ScrapComment';
+import ScrapGoodPoint from './components/ScrapGoodPoint';
 import DashGoodpost from './components/dash/GoodPost';
 import BugReportList from './components/BugReportList';
 
@@ -51,6 +52,7 @@ const app = new Vue({
         DashKaimonoList,
         DashImagepost,
         ScrapComment,
+        ScrapGoodPoint,
         DashGoodpost,
         BugReportList,
     }
