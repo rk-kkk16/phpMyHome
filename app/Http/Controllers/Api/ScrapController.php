@@ -45,20 +45,26 @@ class ScrapController extends Controller
 
                 foreach ($ogps as $ogp_name => $ogp_val) {
                     if ($xpath->query("//meta[@property='$ogp_name']")) {
-                        $ogps[$ogp_name] = $xpath->query("//meta[@property='$ogp_name']/@content")[0]->textContent;
+                        $ogps[$ogp_name] = @$xpath->query("//meta[@property='$ogp_name']/@content")[0]->textContent;
                     }
                 }
 
                 if ($ogps['og:title']) {
                     if ($xpath->query("//title")) {
-                        $ogps['og:title'] = $xpath->query("//title")[0]->textContent;
+                        $ogps['og:title'] = @$xpath->query("//title")[0]->textContent;
                     }
+                }
+                if (!$ogps['og:title']) {
+                    $ogps['og:title'] = '(無題)';
                 }
 
                 // descriptionは100文字までで切り詰め
+                if (!$ogps['og:description']) {
+                    $ogps['og:description'] = $url;
+                }
                 if ($ogps['og:description']) {
                     if (mb_strlen($ogps['og:description']) > 100) {
-                        $ogps['og:description'] = mb_substr($ogps['og:description'], 0, 99) . '…';
+                        $ogps['og:description'] = mb_substr($ogps['og:description'], 0, 97) . '…';
                     }
                 }
 
